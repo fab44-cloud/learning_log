@@ -1,41 +1,23 @@
+# Top-level block containing your app container settings
 applications:
   learning_log:
-    # 1. Upgraded to Python 3.12 to support Django 6.0+
-    type: "python:3.12"
-
-    # 2. Tells Django how to find and securely access the PostgreSQL service
-    relationships:
-      database: "db:postgresql"
+    type: "python:3.11"
 
     hooks:
+      # Keeps the book's exact build hooks
       build: |
         pip install --upgrade pip
         pip install -r requirements.txt
-      deploy: |
-        python manage.py migrate
+        python manage.py collectstatic --noinput
 
     web:
       upstream:
         socket_family: unix
       commands:
-        start: "gunicorn -w 4 -b unix:$SOCKET learning_log.wsgi:application"
-      locations:
-        "/":
-          passthru: true
-        "/static":
-          root: "static"
-          expires: 1h
-          allow: true
+        # Keeps the book's exact start command
+        start: gunicorn learning_log.wsgi:application
 
-    mounts:
-      "static":
-        source: storage
-        source_path: static
-
-services:
-  db:
-    type: postgresql:15
-
+# Top-level block mapping web requests to your learning_log app
 routes:
   "https://{default}/":
     type: upstream
