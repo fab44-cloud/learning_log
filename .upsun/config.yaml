@@ -1,7 +1,7 @@
 # Top-level block containing your app container settings
 applications:
   learning_log:
-    type: "python:3.11"
+    type: "python:3.12"
 
     hooks:
       # Keeps the book's exact build hooks
