@@ -1,6 +1,11 @@
 applications:
   learning_log:
-    type: "python:3.11"
+    # 1. Upgraded to Python 3.12 to support Django 6.0+
+    type: "python:3.12"
+
+    # 2. Tells Django how to find and securely access the PostgreSQL service
+    relationships:
+      database: "db:postgresql"
 
     hooks:
       build: |
