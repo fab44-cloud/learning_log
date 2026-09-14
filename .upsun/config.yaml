@@ -4,18 +4,15 @@ applications:
     type: "python:3.12"
 
     hooks:
-      # Keeps the book's exact build hooks
       build: |
         pip install --upgrade pip
         pip install -r requirements.txt
         python manage.py collectstatic --noinput
 
     web:
-      upstream:
-        socket_family: unix
+      # Change from socket_family to generic HTTP port handling
       commands:
-        # Keeps the book's exact start command
-        start: gunicorn learning_log.wsgi:application
+        start: gunicorn -b 0.0.0.0:$PORT learning_log.wsgi:application
 
 # Top-level block mapping web requests to your learning_log app
 routes:
