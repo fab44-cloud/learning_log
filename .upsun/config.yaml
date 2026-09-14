@@ -1,4 +1,3 @@
-# Top-level block containing your app container settings
 applications:
   learning_log:
     type: "python:3.12"
@@ -10,11 +9,18 @@ applications:
         python manage.py collectstatic --noinput
 
     web:
-      # Change from socket_family to generic HTTP port handling
+      upstream:
+        socket_family: tcp
+        protocol: http
       commands:
-        start: gunicorn -b 0.0.0.0:$PORT learning_log.wsgi:application
+        start: "gunicorn -b 0.0.0.0:$PORT learning_log.wsgi:application"
+      locations:
+        "/":
+          passthru: true
+        "/static":
+          root: "static"
+          allow: true
 
-# Top-level block mapping web requests to your learning_log app
 routes:
   "https://{default}/":
     type: upstream
