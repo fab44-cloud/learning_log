@@ -1,18 +1,14 @@
 applications:
   learning_log:
-    type: "python:3.11" # Update this if you're using a different version (e.g., python:3.10)
+    type: "python:3.11"
 
-    # Installs the Python packages listed in your requirements.txt file
     hooks:
       build: |
         pip install --upgrade pip
         pip install -r requirements.txt
-
-      # Automatically applies your database migrations upon a successful build
       deploy: |
         python manage.py migrate
 
-    # Dictates how Upsun executes your Django project
     web:
       upstream:
         socket_family: unix
@@ -26,20 +22,15 @@ applications:
           expires: 1h
           allow: true
 
-    # Safe persistent storage allocations
-    disk: 512
     mounts:
       "static":
         source: storage
         source_path: static
 
-# Outlines a basic PostgreSQL database service for Django
 services:
   db:
     type: postgresql:15
-    disk: 1024
 
-# Establishes public routing to your application
 routes:
   "https://{default}/":
     type: upstream
