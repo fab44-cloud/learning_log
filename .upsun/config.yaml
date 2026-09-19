@@ -2,7 +2,6 @@ applications:
   app:
     type: python:3.12
 
-    # Define your writeable directory using Upsun rules
     mounts:
       "db":
         source: storage
@@ -13,6 +12,12 @@ applications:
         start: gunicorn ll_project.wsgi:application --bind 0.0.0.0:$PORT
 
     hooks:
+      # 1. The Build Hook installs your packages into the live runtime container
+      build: |
+        pip install --upgrade pip
+        pip install -r requirements.txt
+
+      # 2. The Deploy Hook runs migrations once the container filesystem mounts
       deploy: |
         mkdir -p db
         touch db/db.sqlite3
