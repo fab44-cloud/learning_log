@@ -1,19 +1,16 @@
-# 1. Main container settings
 name: app
 type: python:3.12
+disk: 512
 
-# 2. Allocating persistent writeable storage space
 mounts:
   "db":
     source: local
     source_path: db
 
-# 3. Web routing configuration (tells the host how to start Django)
 web:
   commands:
     start: gunicorn ll_project.wsgi:application --bind 0.0.0.0:$PORT
 
-# 4. Deployment hooks to handle tables automatically
 hooks:
   deploy: |
     mkdir -p db
