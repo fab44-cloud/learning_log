@@ -1,23 +1,21 @@
-# 1. Core application info
+# 1. Main container settings
 name: app
 type: python:3.12
 
-# 2. Define the writeable directory where the database file will sit
+# 2. Allocating persistent writeable storage space
 mounts:
   "db":
     source: local
     source_path: db
 
-# 3. Specify how Platform.sh should serve your web traffic
+# 3. Web routing configuration (tells the host how to start Django)
 web:
   commands:
     start: gunicorn ll_project.wsgi:application --bind 0.0.0.0:$PORT
 
-# 4. Automate database setup on deployment
+# 4. Deployment hooks to handle tables automatically
 hooks:
   deploy: |
-    # Force creation of the directory and empty database file if missing
     mkdir -p db
     touch db/db.sqlite3
-    # Build Django tables
     python manage.py migrate --noinput
