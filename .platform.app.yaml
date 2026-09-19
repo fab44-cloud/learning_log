@@ -1,11 +1,23 @@
+# 1. Core application info
+name: app
+type: python:3.12
+
+# 2. Define the writeable directory where the database file will sit
 mounts:
   "db":
     source: local
     source_path: db
 
+# 3. Specify how Platform.sh should serve your web traffic
+web:
+  commands:
+    start: gunicorn ll_project.wsgi:application --bind 0.0.0.0:$PORT
+
+# 4. Automate database setup on deployment
 hooks:
   deploy: |
-    # Create the database file if it doesn't exist yet
+    # Force creation of the directory and empty database file if missing
+    mkdir -p db
     touch db/db.sqlite3
-    # Run migrations to create your database tables
+    # Build Django tables
     python manage.py migrate --noinput
