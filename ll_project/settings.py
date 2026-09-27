@@ -57,9 +57,9 @@ MIDDLEWARE = [
 'django.contrib.auth.middleware.AuthenticationMiddleware',
 'django.contrib.messages.middleware.MessageMiddleware',
 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-] 
+]
 
-ROOT_URLCONF = 'll_project.urls' 
+ROOT_URLCONF = 'll_project.urls'
 
 TEMPLATES = [
 {
@@ -74,9 +74,9 @@ TEMPLATES = [
 ],
 },
 },
-] 
+]
 
-WSGI_APPLICATION = 'll_project.wsgi.application' 
+WSGI_APPLICATION = 'll_project.wsgi.application'
 
 ### Database
 
@@ -87,7 +87,7 @@ DATABASES = {
 'ENGINE': 'django.db.backends.sqlite3',
 'NAME': BASE_DIR / 'db.sqlite3',
 }
-} 
+}
 
 ### Password validation
 
@@ -106,19 +106,19 @@ AUTH_PASSWORD_VALIDATORS = [
 {
 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
 },
-] 
+]
 
 ### Internationalization
 
 ### https://djangoproject.com
 
-LANGUAGE_CODE = 'en-us' 
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC' 
+TIME_ZONE = 'UTC'
 
-USE_I18N = True 
+USE_I18N = True
 
-USE_TZ = True 
+USE_TZ = True
 
 ### Static files (CSS, JavaScript, Images)
 
