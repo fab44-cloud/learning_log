@@ -49,119 +49,86 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+'django.middleware.security.SecurityMiddleware',
+'whitenoise.middleware.WhiteNoiseMiddleware',  # <-- Added for Render static files
+'django.contrib.sessions.middleware.SessionMiddleware',
+'django.middleware.common.CommonMiddleware',
+'django.middleware.csrf.CsrfViewMiddleware',
+'django.contrib.auth.middleware.AuthenticationMiddleware',
+'django.contrib.messages.middleware.MessageMiddleware',
+'django.middleware.clickjacking.XFrameOptionsMiddleware',
+] 
 
-ROOT_URLCONF = 'll_project.urls'
+ROOT_URLCONF = 'll_project.urls' 
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+{
+'BACKEND': 'django.template.backends.django.DjangoTemplates',
+'DIRS': [],
+'APP_DIRS': True,
+'OPTIONS': {
+'context_processors': [
+'django.template.context_processors.request',
+'django.contrib.auth.context_processors.auth',
+'django.contrib.messages.context_processors.messages',
+],
+},
+},
+] 
 
-WSGI_APPLICATION = 'll_project.wsgi.application'
+WSGI_APPLICATION = 'll_project.wsgi.application' 
 
+### Database
 
-# Database
-# https://djangoproject.com#databases
+### https://djangoproject.com#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+'default': {
+'ENGINE': 'django.db.backends.sqlite3',
+'NAME': BASE_DIR / 'db.sqlite3',
 }
+} 
 
+### Password validation
 
-# Password validation
-# https://djangoproject.com#auth-password-validators
+### https://djangoproject.com#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+{
+'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+},
+{
+'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+},
+] 
 
+### Internationalization
 
-# Internationalization
-# https://djangoproject.com
+### https://djangoproject.com
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-us' 
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC' 
 
-USE_I18N = True
+USE_I18N = True 
 
-USE_TZ = True
+USE_TZ = True 
 
+### Static files (CSS, JavaScript, Images)
 
-# Static files (CSS, JavaScript, Images)
-# https://djangoproject.com
+### https://djangoproject.com
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # <-- Added to explicitly tell Render where to build static files 
 
-# My settings.
+### My settings.
+
 LOGIN_REDIRECT_URL = 'learning_logs:index'
 LOGOUT_REDIRECT_URL = 'learning_logs:index'
 LOGIN_URL = 'accounts:login'
-
-
-# Platform.sh and Upsun settings.
-from platformshconfig import Config
-
-config = Config()
-
-if config.is_valid_platform() or 'UPSUN_PROJECT' in os.environ:
-    ALLOWED_HOSTS.append('.platformsh.site')
-    ALLOWED_HOSTS.append('.upsunapp.com')
-
-    if config.appDir:
-        STATIC_ROOT = Path(config.appDir) / 'static'
-    if config.projectEntropy:
-        SECRET_KEY = config.projectEntropy
-
-    if not config.in_build():
-        try:
-            db_settings = config.credentials('database')
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.postgresql',
-                    'NAME': db_settings['path'],
-                    'USER': db_settings['username'],
-                    'PASSWORD': db_settings['password'],
-                    'HOST': db_settings['host'],
-                    'PORT': db_settings['port'],
-                }
-            }
-        except Exception:
-            DATABASES = {
-                'default': {
-                    'ENGINE': 'django.db.backends.sqlite3',
-                    'NAME': '/app/db/db.sqlite3',
-                }
-            }
